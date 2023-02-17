@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>入职进度</title>
+    <style type="text/css">
+      a {
+        text-decoration: none;
+      }
+      body {
+        background-color: #f2f4f6;
+        margin: 0;
+        font-family: PingFang SC;
+      }
+
+      .margintop-4 {
+        margin-top: 4px;
+      }
+      .margintop-8 {
+        margin-top: 8px;
+      }
+      .margintop-10 {
+        margin-top: 10px;
+      }
+      .margintop-16 {
+        margin-top: 16px;
+      }
+      .board-history {
+        padding: 16px calc(16px - 14px) 0px 16px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: start;
+      }
+      .board-history-item {
+        margin-right: 12px;
+        width: 52px;
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 24px;
+      }
+
+      .board-history-item-title {
+        margin-top: 4px;
+        text-align: center;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        font-size: 12px;
+        font-weight: 400;
+        opacity: 1;
+      }
+      .board-history-icon {
+        width: 36px;
+        height: 36px;
+        opacity: 1;
+        border-radius: 6px;
+        margin: 0 auto;
+      }
+      .board-history-icon-title {
+        width: 28px;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 28px;
+        color: #ffffff;
+        opacity: 1;
+        margin: 4px;
+      }
+      .header-bg {
+        background-color: white;
+        height: 50px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .header-bg-title {
+        height: 24px;
+        font-size: 17px;
+        font-weight: 500;
+        color: #171a1d;
+        opacity: 1;
+        padding: 16px;
+      }
+      /* 面试历史/评价（15）的总div */
+      .all-board-bg {
+        padding: 16px;
+        background-color: white;
+        color: #171a1d;
+      }
+      .all-board-title {
+        font-size: 17px;
+        font-weight: 500;
+        opacity: 1;
+      }
+      .more-link-bg {
+        margin-top: calc(16px - 24px);
+        display: flex;
+        justify-content: center;
+      }
+      .more-link {
+        font-size: 12px;
+        font-weight: 500;
+        color: #1788fb;
+        opacity: 1;
+      }
+
+      .board-list-bg {
+        padding-top: 2px;
+      }
+
+      .board-list {
+        background: white;
+        padding: 16px;
+        color: #171a1d;
+      }
+      .board-list-title {
+        font-size: 17px;
+        font-weight: 500;
+        opacity: 1;
+      }
+      .board-list-time {
+        font-size: 14px;
+        font-weight: 400;
+        opacity: 0.4;
+      }
+      .board-list-point-bg {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .board-list-point-name {
+        font-size: 14px;
+        font-weight: 500;
+        opacity: 1;
+      }
+      .board-list-point-status {
+        padding: 3px 8px;
+        font-size: 12px;
+        font-weight: 400;
+        opacity: 1;
+        border-radius: 3px;
+        margin-left: 20px;
+      }
+      /* 面试通过的 */
+      .status-success {
+        color: #1ab041;
+        background: rgba(26, 176, 65, 0.16);
+      }
+      /* 面试不通过的 */
+      .status-failed {
+        color: #fd9126;
+        background: rgba(253, 145, 38, 0.16);
+      }
+      /* 面试未评价 */
+      .status-not-evaluate {
+        color: #171a1d;
+        background: rgba(126, 134, 142, 0.16);
+      }
+
+      .board-list-point {
+        padding: 3px 8px;
+        background: #ffffff;
+        border: 1px solid #1788fb;
+        opacity: 1;
+        border-radius: 3px;
+        font-size: 12px;
+        font-weight: 400;
+        color: #1788fb;
+        margin-left: 12px;
+      }
+      /* 详细的面试评价 */
+      .board-list-des {
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 28px;
+        opacity: 0.8;
+        margin-top: 18px;
+        margin-bottom: 16px;
+      }
+      .to-evaluate {
+        display: flex;
+        align-items: center;
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 28px;
+        color: #1788fb;
+        opacity: 1;
+      }
+      /* 右边的箭头 */
+      .arrow-right {
+        margin-left: 10px;
+        width: 5px;
+        height: 5px;
+        background-color: transparent; /* 模块背景为透明 */
+        border-color: #1788fb;
+        border-style: solid;
+        border-width: 1px 1px 0 0;
+        /* border: 1px solid #1788FB; */
+        transform: rotate(45deg); /*箭头方向可以自由切换角度*/
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header-bg">
+      <div class="header-bg-title">详情</div>
+      <div class="header-bg-title">关闭</div>
+    </div>
+    <div class="all-board-bg" style="margin-top: 2px">
+      <div class="all-board-title">面试历史/评价（15）</div>
+
+      <div class="board-history">
+        <div class="board-history-item">
+          <div class="board-history-icon">
+            <div class="board-history-icon-title">嘎嘎</div>
+          </div>
+          <div class="board-history-item-title">嘎嘎的复试</div>
+        </div>
+      </div>
+      <div class="more-link-bg">
+        <a
+          class="more-link"
+          href="http://www.baidu.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          >查看更多</a
+        >
+      </div>
+    </div>
+    <!-- 面试详情部分 所有额面试评价 -->
+    <div class="board-list-bg">
+      <!-- 每个具体的评价 -->
+      <div class="board-list" style="margin-top: 10px">
+        <div>
+          <div class="board-list-title">嘎嘎的复试</div>
+          <div class="board-list-time margintop-4">200-09-20 14:00-15:00</div>
+        </div>
+
+        <div class="board-list-point-bg margintop-16">
+          <div>
+            <span class="board-list-point-name">面试官：李四</span>
+            <span class="board-list-point-status status-success">通过</span>
+            <span class="board-list-point">85分</span>
+          </div>
+        </div>
+        <div class="board-list-des">
+          1、思维逻辑比较清晰，对工作的陈述条理性较强，既往基础工作的掌握也是相对比较扎实；<br />
+          2、具备信息化的理念，有参与资金系统的一些上线执行及推广工作，并且也接触过费控系统基于智能审核的一些经验，学习能力较强。
+        </div>
+
+        <div class="board-list-point-bg margintop-16">
+          <div>
+            <span class="board-list-point-name">面试官：王五</span>
+            <span class="board-list-point-status status-not-evaluate">
+              未评价
+            </span>
+          </div>
+          <a
+            class="to-evaluate"
+            href="http://www.baidu.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            >去评价
+            <div class="arrow-right"></div
+          ></a>
+        </div>
+      </div>
+
+      <div class="board-list" style="margin-top: 10px">
+        <div>
+          <div class="board-list-title">嘎嘎的初试</div>
+          <div class="board-list-time margintop-4">200-09-20 14:00-15:00</div>
+        </div>
+
+        <div class="board-list-point-bg margintop-16">
+          <div>
+            <span class="board-list-point-name">面试官：李四</span>
+            <span class="board-list-point-status status-success">通过</span>
+            <span class="board-list-point">85分</span>
+          </div>
+        </div>
+        <div class="board-list-des">
+          1、思维逻辑比较清晰，对工作的陈述条理性较强，既往基础工作的掌握也是相对比较扎实；<br />
+          2、具备信息化的理念，有参与资金系统的一些上线执行及推广工作，并且也接触过费控系统基于智能审核的一些经验，学习能力较强。
+        </div>
+
+        <div class="board-list-point-bg margintop-16">
+          <div>
+            <span class="board-list-point-name">面试官：王五</span>
+            <span class="board-list-point-status status-failed"> 不通过 </span>
+            <span class="board-list-point">79分</span>
+          </div>
+        </div>
+        <div class="board-list-des">
+          1、思维逻辑比较清晰，对工作的陈述条理性较强，既往基础工作的掌握也是相对比较扎实；<br />
+          2、具备信息化的理念，有参与资金系统的一些上线执行及推广工作，并且也接触过费控系统基于智能审核的一些经验，学习能力较强。
+        </div>
+      </div>
+    </div>
+    <script>
+      window.onload = function () {
+        const arrr = [
+          {
+            isblue: true,
+            icon: "嘎嘎",
+            name: "张三",
+          },
+          {
+            isblue: false,
+            icon: "火火",
+            name: "火火(一二三)",
+          },
+          {
+            isblue: true,
+            icon: "嘎嘎",
+            name: "火火(二三)",
+          },
+          {
+            isblue: true,
+            icon: "嘎嘎",
+            name: "张三",
+          },
+          {
+            isblue: true,
+            icon: "嘎嘎",
+            name: "张三",
+          },
+          {
+            isblue: false,
+            icon: "嘎嘎",
+            name: "张三",
+          },
+          {
+            isblue: true,
+            icon: "嘎嘎",
+            name: "张三",
+          },
+          {
+            isblue: false,
+            icon: "嘎嘎",
+            name: "张三",
+          },
+          {
+            isblue: true,
+            icon: "嘎嘎",
+            name: "张三",
+          },
+          {
+            isblue: true,
+            icon: "嘎嘎",
+            name: "张三",
+          },
+          {
+            isblue: true,
+            icon: "嘎嘎",
+            name: "张三",
+          },
+          {
+            isblue: true,
+            icon: "嘎嘎",
+            name: "张三",
+          },
+          {
+            isblue: true,
+            icon: "嘎嘎",
+            name: "张三",
+          },
+          {
+            isblue: true,
+            icon: "嘎嘎",
+            name: "张三",
+          },
+          {
+            isblue: false,
+            icon: "嘎嘎",
+            name: "张三",
+          },
+          {
+            isblue: true,
+            icon: "嘎嘎",
+            name: "张三",
+          },
+          {
+            isblue: true,
+            icon: "嘎嘎",
+            name: "张三",
+          },
+          {
+            isblue: false,
+            icon: "嘎嘎",
+            name: "张三",
+          },
+          {
+            isblue: true,
+            icon: "嘎嘎",
+            name: "张三",
+          },
+        ];
+        let innerHTML = "";
+        for (const item of arrr) {
+          innerHTML += `<div class="board-history-item">
+          <div class="board-history-icon" style="background: ${
+            item.isblue ? "#1788fb" : "#C6C6C6"
+          };">
+            <div class="board-history-icon-title">${item.icon}</div>
+          </div>
+          <div class="board-history-item-title" style="color: ${
+            item.isblue ? "#1788fb" : "#C6C6C6"
+          };">${item.name}</div>
+        </div>`;
+        }
+
+        document.getElementsByClassName("board-history")[0].innerHTML =
+          innerHTML;
+      };
+    </script>
+  </body>
+</html>
